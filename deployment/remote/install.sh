@@ -52,7 +52,7 @@ if [ -d $TOMCAT_HOME ]; then
     fi
 
     echo "Recuperando última versión de la aplicación..."
-    REMOTE_WAR_FILE_NAME=$(python ./deployment/remote/getLastVersion.py)
+    REMOTE_WAR_FILE_NAME=$(python getLastVersion.py)
     echo "====> Se ha recuperado la versión: $REMOTE_WAR_FILE_NAME"
 
     echo "Descargando aplicación en [$TOMCAT_HOME/webapps]..."
