@@ -1,8 +1,10 @@
 #!/bin/bash
 
 TOMCAT_HOME="/Users/sarcosh/Documents/apache-tomcat-8.5.54"
-WAR_FILE_NAME="spring-demo.war"
-NEXUS_URL="http://openshift43.ddns.net:8080/nexus/repository/spring-demo-snapshot/com/seat/demo/spring-demo/0.0.1-SNAPSHOT/spring-demo-0.0.1-20200428.082912-1.war"
+LOCAL_WAR_FILE_NAME="spring-demo.war"
+
+REMOTE_WAR_FILE_NAME="spring-demo-0.0.1-20200428.095625-1.war"
+NEXUS_URL="http://openshift43.ddns.net:8080/nexus/repository/spring-demo-snapshot/com/seat/demo/spring-demo/0.0.1-SNAPSHOT/"
 
 is_Running() {
 
@@ -38,21 +40,25 @@ if [ -d $TOMCAT_HOME ]; then
     fi
 
     echo "Eliminando fichero WAR del directorio [$TOMCAT_HOME/webapps]..."
-    if [ -f "$TOMCAT_HOME/webapps/$WAR_FILE_NAME" ]; then
-    	rm $TOMCAT_HOME/webapps/$WAR_FILE_NAME
+    if [ -f "$TOMCAT_HOME/webapps/$LOCAL_WAR_FILE_NAME" ]; then
+    	rm $TOMCAT_HOME/webapps/$LOCAL_WAR_FILE_NAME
     fi
 
     echo "Eliminando directorio asociado al despliegue anterior en [$TOMCAT_HOME/webapps]..."
-    DEP_DIRECTORY_NAME=$(echo "$WAR_FILE_NAME" | cut -f 1 -d '.')
+    DEP_DIRECTORY_NAME=$(echo "$LOCAL_WAR_FILE_NAME" | cut -f 1 -d '.')
 
     if [ -d "$TOMCAT_HOME/webapps/$DEP_DIRECTORY_NAME" ]; then
     	rm -rf $TOMCAT_HOME/webapps/$DEP_DIRECTORY_NAME
     fi
 
-    echo "Descargando aplicación en [$TOMCAT_HOME/webapps]..."
-    wget -O $TOMCAT_HOME/webapps/$WAR_FILE_NAME - $NEXUS_URL
+    echo "Recuperando última versión de la aplicación..."
+    REMOTE_WAR_FILE_NAME=$(python ./deployment/remote/getLastVersion.py)
+    echo "====> Se ha recuperado la versión: $REMOTE_WAR_FILE_NAME"
 
-    if [ -f "$TOMCAT_HOME/webapps/$WAR_FILE_NAME" ]; then
+    echo "Descargando aplicación en [$TOMCAT_HOME/webapps]..."
+    wget -O $TOMCAT_HOME/webapps/$LOCAL_WAR_FILE_NAME $NEXUS_URL$REMOTE_WAR_FILE_NAME
+
+    if [ -f "$TOMCAT_HOME/webapps/$LOCAL_WAR_FILE_NAME" ]; then
     	echo "Iniciando Tomcat..."
 		start_Tomcat
 
