@@ -2,6 +2,7 @@
 
 TOMCAT_HOME="/Users/sarcosh/Documents/apache-tomcat-8.5.54"
 WAR_FILE_NAME="spring-demo.war"
+NEXUS_URL="http://openshift43.ddns.net:8080/nexus/repository/spring-demo-snapshot/com/seat/demo/spring-demo/0.0.1-SNAPSHOT/spring-demo-0.0.1-20200428.082912-1.war"
 
 is_Running() {
 
@@ -48,10 +49,10 @@ if [ -d $TOMCAT_HOME ]; then
     	rm -rf $TOMCAT_HOME/webapps/$DEP_DIRECTORY_NAME
     fi
 
-    echo "Copiando aplicación en [$TOMCAT_HOME/webapps]..."
-    if [ -f "./target/$WAR_FILE_NAME" ]; then
-    	cp ./target/$WAR_FILE_NAME $TOMCAT_HOME/webapps
-    
+    echo "Descargando aplicación en [$TOMCAT_HOME/webapps]..."
+    wget -O $TOMCAT_HOME/webapps/$WAR_FILE_NAME - $NEXUS_URL
+
+    if [ -f "$TOMCAT_HOME/webapps/$WAR_FILE_NAME" ]; then
     	echo "Iniciando Tomcat..."
 		start_Tomcat
 
@@ -62,7 +63,7 @@ if [ -d $TOMCAT_HOME ]; then
     	fi
     
     else
-    	echo "Error: El fichero ./target/$WAR_FILE_NAME no existe."
+    	echo "Error: No se ha podido descargar el fichero WAR desde $NEXUS_URL"
     	exit 1
     fi
 
