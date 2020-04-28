@@ -57,5 +57,20 @@
 		
 		<finalName>spring-demo</finalName>
 	</build>
+	
+	<distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <url>
+                http://nexus3-spring-demo.apps-crc.testing/repository/spring-demo-snapshot/
+            </url>
+        </snapshotRepository>
+        <repository>
+            <id>maven-releases</id>
+            <url>
+                http://seat-nexus3-seat-ci-cd.${ENVIRONMENT_NAME}.aws.seat.cloud.vwgroup.com/repository/modularBackend-EXP/
+            </url>
+        </repository>
+    </distributionManagement>
 
 </project>
