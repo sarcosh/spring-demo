@@ -28,4 +28,4 @@ def download_file_from_url(urlNexusRepository, repositoryName, groupId, artifact
 
  filedata = requests.get(url)
 
- open(save_path + "/" + artifactId + ".zip", 'wb').write(filedata.content)
+ open(save_path + "/" + artifactId + ".war", 'wb').write(filedata.content)
