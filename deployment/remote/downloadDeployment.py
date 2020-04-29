@@ -11,7 +11,7 @@ def main():
 
  lastVersion = nexus.getLastVersion(urlNexusRepository, repositoryName, groupId, artifactId, version)
 
- nexus.download_file_from_url(urlNexusRepository, repositoryName, groupId, artifactId, version, lastVersion, "/Users/sarcosh/Documents/TEMP")
+ nexus.download_file_from_url(urlNexusRepository, repositoryName, groupId, artifactId, version, lastVersion, "/workspace/source/deployment/remote")
 
 main()
 
