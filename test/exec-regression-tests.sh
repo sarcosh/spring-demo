@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /home/sarcosh/test/spring-demo
+cd /home/sarcosh/test/source
 
 export DISPLAY=':0'
 
