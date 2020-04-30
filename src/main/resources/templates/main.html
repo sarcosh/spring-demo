@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>Hello, world!</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <!--     Fonts and icons     -->
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+  <!-- Material Kit CSS -->
+  <link href="assets/css/material-dashboard.css?v=2.1.2" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="wrapper ">
+    <div class="sidebar" data-color="purple" data-background-color="white">
+      <!--
+      Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
+
+      Tip 2: you can also add an image using data-image tag
+  -->
+      <div class="logo">
+        <a href="http://apps.eamlab.es" class="simple-text logo-mini">
+          DEMO
+        </a>
+        <a href="http://apps.eamlab.es" class="simple-text logo-normal">
+          HR Dashboard
+        </a>
+      </div>
+      <div class="sidebar-wrapper">
+        <ul class="nav">
+          <li class="nav-item active  ">
+            <a class="nav-link" href="#0">
+              <i class="material-icons">dashboard</i>
+              <p>Dashboard</p>
+            </a>
+          </li>
+          <!-- your sidebar here -->
+        </ul>
+      </div>
+    </div>
+    <div class="main-panel">
+      <!-- Navbar -->
+      <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
+        <div class="container-fluid">
+          <div class="navbar-wrapper">
+            <a class="navbar-brand" href="javascript:;">Dashboard</a>
+          </div>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="navbar-toggler-icon icon-bar"></span>
+            <span class="navbar-toggler-icon icon-bar"></span>
+            <span class="navbar-toggler-icon icon-bar"></span>
+          </button>
+          <div class="collapse navbar-collapse justify-content-end">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" href="javascript:;">
+                  <i class="material-icons">notifications</i> Notifications
+                </a>
+              </li>
+              <!-- your navbar here -->
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <!-- End Navbar -->
+      <div class="content">
+        <div class="container-fluid">
+          <!-- your content here -->
+          
+          <table class="table">
+			    <thead>
+			        <tr>
+			            <th class="text-center">#</th>
+			            <th>Name</th>
+			            <th>Job Position</th>
+			            <th>Since</th>
+			            <th class="text-right">Salary</th>
+			            <th class="text-right">Actions</th>
+			        </tr>
+			    </thead>
+			    <tbody>
+			        <tr>
+			            <td class="text-center">1</td>
+			            <td>Andrew Mike</td>
+			            <td>Develop</td>
+			            <td>2013</td>
+			            <td class="text-right">&euro; 99,225</td>
+			            <td class="td-actions text-right">
+			                <button type="button" rel="tooltip" class="btn btn-info">
+			                    <i class="material-icons">person</i>
+			                </button>
+			                <button type="button" rel="tooltip" class="btn btn-success">
+			                    <i class="material-icons">edit</i>
+			                </button>
+			                <button type="button" rel="tooltip" class="btn btn-danger">
+			                    <i class="material-icons">close</i>
+			                </button>
+			            </td>
+			        </tr>
+			        <tr>
+			            <td class="text-center">2</td>
+			            <td>John Doe</td>
+			            <td>Design</td>
+			            <td>2012</td>
+			            <td class="text-right">&euro; 89,241</td>
+			            <td class="td-actions text-right">
+			                <button type="button" rel="tooltip" class="btn btn-info btn-round">
+			                    <i class="material-icons">person</i>
+			                </button>
+			                <button type="button" rel="tooltip" class="btn btn-success btn-round">
+			                    <i class="material-icons">edit</i>
+			                </button>
+			                <button type="button" rel="tooltip" class="btn btn-danger btn-round">
+			                    <i class="material-icons">close</i>
+			                </button>
+			            </td>
+			        </tr>
+			        <tr>
+			            <td class="text-center">3</td>
+			            <td>Alex Mike</td>
+			            <td>Design</td>
+			            <td>2010</td>
+			            <td class="text-right">&euro; 92,144</td>
+			            <td class="td-actions text-right">
+			                <button type="button" rel="tooltip" class="btn btn-info btn-simple">
+			                    <i class="material-icons">person</i>
+			                </button>
+			                <button type="button" rel="tooltip" class="btn btn-success btn-simple">
+			                    <i class="material-icons">edit</i>
+			                </button>
+			                <button type="button" rel="tooltip" class="btn btn-danger btn-simple">
+			                    <i class="material-icons">close</i>
+			                </button>
+			            </td>
+			        </tr>
+			    </tbody>
+			</table>
+
+          
+        </div>
+      </div>
+      <footer class="footer">
+        <div class="container-fluid">
+          <nav class="float-left">
+            <ul>
+              <li>
+                <a href="http://apps.eamlab.es">
+                  Creative Tim
+                </a>
+              </li>
+            </ul>
+          </nav>
+          <div class="copyright float-right">
+            &copy;
+            <script>
+              document.write(new Date().getFullYear())
+            </script>, made with <i class="material-icons">favorite</i> by
+            <a href="http://apps.eamlab.es" target="_blank">EAM</a> for a better web.
+          </div>
+          <!-- your footer here -->
+        </div>
+      </footer>
+    </div>
+  </div>
+</body>
+
+</html>
