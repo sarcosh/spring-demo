@@ -44,7 +44,7 @@ public class RegressionTestLoginInterface {
     assertEquals("LOGIN", driver.findElement(By.xpath("//button")).getText());
     driver.findElement(By.name("email")).click();
     driver.findElement(By.name("email")).clear();
-    driver.findElement(By.name("email")).sendKeys("inflexion69@gmail.com");
+    driver.findElement(By.name("email")).sendKeys("sergio.arcos@seat.es");
     driver.findElement(By.name("pass")).click();
     driver.findElement(By.name("pass")).clear();
     driver.findElement(By.name("pass")).sendKeys("34FB==");

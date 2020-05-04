@@ -13,7 +13,7 @@ public class LoginController {
 		String viewToShow = null;
 
 		if(email != null && pass != null) {
-			if(email.equalsIgnoreCase("sergio.arcos@gmail.com") && pass.equalsIgnoreCase("34FB==")) {
+			if(email.equalsIgnoreCase("sergio.arcos@seat.es") && pass.equalsIgnoreCase("34FB==")) {
 				viewToShow = "main";
 			}			
 		} else {
