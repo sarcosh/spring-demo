@@ -1,75 +1,85 @@
 #!/bin/bash
 
-TOMCAT_HOME="/Users/sarcosh/Documents/apache-tomcat-8.5.54"
-LOCAL_WAR_FILE_NAME="spring-demo.war"
+#######################################################################################################################
+# 04-2020 David C   - Enterprise Architecture Management of SEAT
+# $1 - Fichero war
+# 
+# Para el despligue se copia el fichero con la fecha en una carpeta nueva llamada deploy_webapps dentro del directorio
+# de Tomcat. Luego se crea un enlace simbólico del fichero a la carpeta correcta "webapps".
+# Se borran el historial más antiguo de $RET días.
+######################################################################################################################
 
-REMOTE_WAR_FILE_NAME="spring-demo-0.0.1-20200428.095625-1.war"
-NEXUS_URL="http://openshift43.ddns.net:8080/nexus/repository/spring-demo-snapshot/com/seat/demo/spring-demo/0.0.1-SNAPSHOT/"
+# Comprobaciones
+if [[ "$1" != *\.war ]]; then
+   printf "\nMadafacker!. Debes indicar un fichero war.";
+   printf "\nEj: ./install.sh tuputaaplicacion.war\n";
+   exit 1;
+fi
 
-is_Running() {
 
- wget -O - http://127.0.0.1:8081/ >& /dev/null
+# Variables
+TOMCAT_HOME="/usr/local/tomcat9"
+WAR_FILE=$1
+FECH=`date +"%Y%m%d%H%M"`
+RET=30
 
- if( test $? -eq 0 ) 
- then
-  return 0
- else
-  return 1
- fi
-}
-
+# Funciones
 stop_Tomcat(){
- $TOMCAT_HOME/bin/shutdown.sh
+	systemctl stop tomcat
 }
 
 start_Tomcat(){
- $TOMCAT_HOME/bin/startup.sh
+	systemctl start tomcat
 }
 
 
+# Main
 if [ -d $TOMCAT_HOME ]; then
     echo "Validando si el Tomcat se encuentra funcionando..." 
-
-    is_Running
-    IS_RUNNING_RETURN_CODE=$?
-    if [ "$IS_RUNNING_RETURN_CODE" -eq "1" ]; then
+    SERVICE_STATUS="$(systemctl is-active tomcat)"
+    if [ "${SERVICE_STATUS}" = "active" ]; then
       echo "Se ha detectado que el Tomcat está funcionando..."
       echo "Se inicia su parada..."
       stop_Tomcat
-
+      sleep 1
+    else
+      printf "\nTomcat Service is down"
+      sleep 1
     fi
-
-    echo "Eliminando fichero WAR del directorio [$TOMCAT_HOME/webapps]..."
-    if [ -f "$TOMCAT_HOME/webapps/$LOCAL_WAR_FILE_NAME" ]; then
-    	rm $TOMCAT_HOME/webapps/$LOCAL_WAR_FILE_NAME
+    
+    # Copiamos WAR y modificamos enlace
+    printf "\nDeploying app...\n"
+    sleep 1
+    if [ -d $TOMCAT_HOME/deploy_webapps ]; then 
+	printf "\nDirectory exist"
+    else
+	printf "\nNo existe el directorio. Creandolo..."
+        mkdir $TOMCAT_HOME/deploy_webapps
+	sleep 1
     fi
+    printf "\nDeleting webapps files"
+    rm -fr $TOMCAT_HOME/webapps/*
+    mv $WAR_FILE $TOMCAT_HOME/deploy_webapps/app.war.$FECH
+    ln -s $TOMCAT_HOME/deploy_webapps/app.war.$FECH $TOMCAT_HOME/webapps/app_$FECH.war
+    chown tomcat:tomcat -R $TOMCAT_HOME
+    sleep 1
+   
+    # Borramos fichero antiguos
+    printf "\nBorramos fichero mas antiguos de $RET dias\n"
+    find $TOMCAT_HOME/deploy_webapps/* -mtime +$RET -exec rm {} \;
 
-    echo "Eliminando directorio asociado al despliegue anterior en [$TOMCAT_HOME/webapps]..."
-    DEP_DIRECTORY_NAME=$(echo "$LOCAL_WAR_FILE_NAME" | cut -f 1 -d '.')
-
-    if [ -d "$TOMCAT_HOME/webapps/$DEP_DIRECTORY_NAME" ]; then
-    	rm -rf $TOMCAT_HOME/webapps/$DEP_DIRECTORY_NAME
-    fi
-
-    echo "Recuperando última versión de la aplicación..."
-    REMOTE_WAR_FILE_NAME=$(python getLastVersion.py)
-    echo "====> Se ha recuperado la versión: $REMOTE_WAR_FILE_NAME"
-
-    echo "Descargando aplicación en [$TOMCAT_HOME/webapps]..."
-    wget -O $TOMCAT_HOME/webapps/$LOCAL_WAR_FILE_NAME $NEXUS_URL$REMOTE_WAR_FILE_NAME
-
-    if [ -f "$TOMCAT_HOME/webapps/$LOCAL_WAR_FILE_NAME" ]; then
+    if [ -f "$TOMCAT_HOME/webapps/app_$FECH.war" ]; then
     	echo "Iniciando Tomcat..."
-		start_Tomcat
-
-		is_Running
-    	IS_RUNNING_RETURN_CODE=$?
-    	if [ "$IS_RUNNING_RETURN_CODE" -eq "1" ]; then
-      		echo "El Tomcat se ha iniciado correctamente..."
+	start_Tomcat
+	sleep 3
+        SERVICE_STATUS="$(systemctl is-active tomcat)"
+        if [ "${SERVICE_STATUS}" = "active" ]; then
+      		echo "Tomcat se ha iniciado correctamente... aplicacion desplegada"
+		sleep 1
     	fi
     
     else
-    	echo "Error: No se ha podido descargar el fichero WAR desde $NEXUS_URL"
+    	echo "Error: No se ha podido copiar el fichero $WAR_FILE"
     	exit 1
     fi
 
