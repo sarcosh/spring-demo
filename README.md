@@ -202,14 +202,57 @@ iMac-de-Sergio:spring-demo sarcosh$
 Una vez descargado el proyecto bastará con realizar una modificación y sincronizarla con GitHub para disparar automáticamente el proceso de integración a través del uso de webhook configurado en el proyecto. Para ello se puede realizar una modificación, por ejemplo, a este fichero "README.MD".
 
 ```bash
-iMac-de-Sergio:workspace sarcosh$ git clone https://github.com/sarcosh/spring-demo.git
+iMac-de-Sergio:spring-demo sarcosh$ vi README.md 
 
-iMac-de-Sergio:workspace sarcosh$ cd spring-demo/
+iMac-de-Sergio:spring-demo sarcosh$ git add .
 
-iMac-de-Sergio:spring-demo sarcosh$ 
+iMac-de-Sergio:spring-demo sarcosh$ git commit -m "Actualización de la documentación"
+
+[master 14d521c] Actualización de la documentación
+ 2 files changed, 216 insertions(+), 3 deletions(-)
+ rewrite README.md (99%)
+ 
+iMac-de-Sergio:spring-demo sarcosh$ git push
+
+Enumerando objetos: 7, listo.
+Contando objetos: 100% (7/7), listo.
+Compresión delta usando hasta 12 hilos
+Comprimiendo objetos: 100% (4/4), listo.
+Escribiendo objetos: 100% (4/4), 3.57 KiB | 3.57 MiB/s, listo.
+Total 4 (delta 2), reusado 0 (delta 0)
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To https://github.com/sarcosh/spring-demo.git
+   453d74a..14d521c  master -> master
 ```
 
+Una vez completado el proceso de sincronización de cambios se podrá ver como se inicia de manera automática la pipeline.
 
+```bash
+iMac-de-Sergio:spring-demo sarcosh$ oc get pods -w
+
+ci-spring-demo-w5l4q-build-binary-task-5cmcv-pod-p4747            0/5     Pending           0          0s
+ci-spring-demo-w5l4q-build-binary-task-5cmcv-pod-p4747            0/5     Pending           0          0s
+ci-spring-demo-w5l4q-build-binary-task-5cmcv-pod-p4747            0/5     Init:0/3          0          0s
+ci-spring-demo-w5l4q-build-binary-task-5cmcv-pod-p4747            0/5     Init:0/3          0          2s
+ci-spring-demo-w5l4q-build-binary-task-5cmcv-pod-p4747            0/5     Init:1/3          0          3s
+ci-spring-demo-w5l4q-build-binary-task-5cmcv-pod-p4747            0/5     Init:2/3          0          5s
+ci-spring-demo-w5l4q-build-binary-task-5cmcv-pod-p4747            0/5     PodInitializing   0          6s
+ci-spring-demo-w5l4q-build-test-regression-task-tqqmg-pod-pc7gn   0/7     Completed         0          57s
+ci-spring-demo-w5l4q-build-binary-task-5cmcv-pod-p4747            5/5     Running           0          11s
+ci-spring-demo-w5l4q-build-binary-task-5cmcv-pod-p4747            5/5     Running           0          11s
+ci-spring-demo-w5l4q-build-binary-task-5cmcv-pod-p4747            4/5     Running           0          17s
+ci-spring-demo-w5l4q-build-binary-task-5cmcv-pod-p4747            3/5     Running           0          53s
+ci-spring-demo-w5l4q-build-binary-task-5cmcv-pod-p4747            2/5     Running           0          54s
+ci-spring-demo-w5l4q-build-binary-task-5cmcv-pod-p4747            1/5     Running           0          91s
+ci-spring-demo-w5l4q-build-binary-task-5cmcv-pod-p4747            0/5     Completed         0          2m11s
+ci-spring-demo-w5l4q-build-binary-task-5cmcv-pod-p4747            0/5     Completed         0          2m11s
+ci-spring-demo-w5l4q-build-binary-task-5cmcv-pod-p4747            0/5     Completed         0          2m19s 
+
+```
+
+Una vez completado todo el proceso de construcción del proyecto se podrá comprobar como en el Nexus se dispone de un nuevo artefacto listo para ser desplegado. Tal como muestra la siguiente imagen:
+
+![Proposal of Pipeline](./img/nexus_CI-artifact.png)
 
 
 
