@@ -9,34 +9,45 @@
 # Se borran el historial más antiguo de $RET días.
 ######################################################################################################################
 
-# Comprobaciones
-if [[ "$1" != *\.war ]]; then
-   printf "\nMadafacker!. Debes indicar un fichero war.";
-   printf "\nEj: ./install.sh tuputaaplicacion.war\n";
-   exit 1;
-fi
-
-
 # Variables
 TOMCAT_HOME="/usr/local/tomcat9"
 WAR_FILE=$1
 FECH=`date +"%Y%m%d%H%M"`
 RET=30
 
+
+# Comprobaciones
+if [[ "$1" != *\.war ]]; then
+   printf "\nMadafacker!. Debes indicar un fichero war.";
+   printf "\nEj: ./install.sh tuputaaplicacion.war\n";
+   exit 1;
+elif [[ ! -f "$1" ]]; then
+      printf "\nMadafacker!. El fichero no existe!!\n";
+      exit 1;
+fi
+if [[ "$2" != "" ]]; then
+   printf "\nAplicacion $2"
+   APPL=$2
+else
+   printf "\nNo se ha pasado nombre de la aplicación. Se desplegará como app$FECH."
+   APPL=app$FECH
+fi 
+   
+
 # Funciones
 stop_Tomcat(){
-	systemctl stop tomcat
+   sudo systemctl stop tomcat
 }
 
 start_Tomcat(){
-	systemctl start tomcat
+   sudo systemctl start tomcat
 }
 
 
 # Main
 if [ -d $TOMCAT_HOME ]; then
     echo "Validando si el Tomcat se encuentra funcionando..." 
-    SERVICE_STATUS="$(systemctl is-active tomcat)"
+    SERVICE_STATUS="$(sudo systemctl is-active tomcat)"
     if [ "${SERVICE_STATUS}" = "active" ]; then
       echo "Se ha detectado que el Tomcat está funcionando..."
       echo "Se inicia su parada..."
@@ -60,7 +71,8 @@ if [ -d $TOMCAT_HOME ]; then
     printf "\nDeleting webapps files"
     rm -fr $TOMCAT_HOME/webapps/*
     mv $WAR_FILE $TOMCAT_HOME/deploy_webapps/app.war.$FECH
-    ln -s $TOMCAT_HOME/deploy_webapps/app.war.$FECH $TOMCAT_HOME/webapps/app_$FECH.war
+
+    ln -s $TOMCAT_HOME/deploy_webapps/app.war.$FECH $TOMCAT_HOME/webapps/$APPL.war
     chown tomcat:tomcat -R $TOMCAT_HOME
     sleep 1
    
@@ -68,7 +80,7 @@ if [ -d $TOMCAT_HOME ]; then
     printf "\nBorramos fichero mas antiguos de $RET dias\n"
     find $TOMCAT_HOME/deploy_webapps/* -mtime +$RET -exec rm {} \;
 
-    if [ -f "$TOMCAT_HOME/webapps/app_$FECH.war" ]; then
+    if [ -f "$TOMCAT_HOME/webapps/$APPL.war" ]; then
     	echo "Iniciando Tomcat..."
 	start_Tomcat
 	sleep 3
@@ -87,7 +99,3 @@ else
     echo "Error: El directorio $TOMCAT_HOME no existe."
     exit 1
 fi
-
-
-
-
